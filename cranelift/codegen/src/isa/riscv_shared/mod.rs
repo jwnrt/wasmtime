@@ -3,7 +3,7 @@
 use crate::dominator_tree::DominatorTree;
 use crate::ir::{Function, Type};
 use crate::isa::riscv_shared::settings as riscv_settings;
-use crate::isa::{Builder as IsaBuilder, FunctionAlignment, OwnedTargetIsa, TargetIsa};
+use crate::isa::{FunctionAlignment, OwnedTargetIsa, TargetIsa};
 use crate::machinst::{
     compile, CompiledCode, CompiledCodeStencil, MachInst, MachTextSectionBuilder, Reg, SigSet,
     TextSectionBuilder, VCode,
@@ -14,11 +14,11 @@ use crate::{ir, CodegenError};
 use alloc::{boxed::Box, vec::Vec};
 use core::fmt;
 use cranelift_control::ControlPlane;
-use target_lexicon::{Architecture, Triple};
+use target_lexicon::{PointerWidth, Triple};
 mod abi;
 pub(crate) mod inst;
 mod lower;
-mod settings;
+pub(crate) mod settings;
 #[cfg(feature = "unwind")]
 use crate::isa::unwind::systemv;
 
@@ -29,6 +29,7 @@ pub struct RiscvBackend {
     triple: Triple,
     flags: shared_settings::Flags,
     isa_flags: riscv_settings::Flags,
+    pointer_width: PointerWidth,
 }
 
 impl RiscvBackend {
@@ -37,11 +38,13 @@ impl RiscvBackend {
         triple: Triple,
         flags: shared_settings::Flags,
         isa_flags: riscv_settings::Flags,
+        pointer_width: PointerWidth,
     ) -> RiscvBackend {
         RiscvBackend {
             triple,
             flags,
             isa_flags,
+            pointer_width,
         }
     }
 
@@ -56,7 +59,7 @@ impl RiscvBackend {
         let emit_info = EmitInfo::new(self.flags.clone(), self.isa_flags.clone());
         let sigs = SigSet::new::<abi::RiscvMachineDeps>(func, &self.flags)?;
         let abi = abi::RiscvCallee::new(func, self, &self.isa_flags, &sigs)?;
-        compile::compile::<RiscvBackend>(func, domtree, self, abi, emit_info, sigs, ctrl_plane)
+        compile::compile::<Self>(func, domtree, self, abi, emit_info, sigs, ctrl_plane)
     }
 }
 
@@ -95,8 +98,12 @@ impl TargetIsa for RiscvBackend {
     }
 
     fn name(&self) -> &'static str {
-        "riscv64"
+        match self.pointer_width {
+            PointerWidth::U64 => "riscv64",
+            width => unimplemented!("{width:?} currently unsupported"),
+        }
     }
+
     fn dynamic_vector_bytes(&self, _dynamic_ty: ir::Type) -> u32 {
         16
     }
@@ -218,27 +225,16 @@ impl fmt::Display for RiscvBackend {
             .field("name", &self.name())
             .field("triple", &self.triple())
             .field("flags", &format!("{}", self.flags()))
+            .field("pointer_width", &self.pointer_width)
             .finish()
     }
 }
 
-/// Create a new `isa::Builder`.
-pub fn isa_builder(triple: Triple) -> IsaBuilder {
-    match triple.architecture {
-        Architecture::Riscv64(..) => {}
-        _ => unreachable!(),
-    }
-    IsaBuilder {
-        triple,
-        setup: riscv_settings::builder(),
-        constructor: isa_constructor,
-    }
-}
-
-fn isa_constructor(
+pub(crate) fn isa_constructor(
     triple: Triple,
     shared_flags: Flags,
     builder: &shared_settings::Builder,
+    pointer_width: PointerWidth,
 ) -> CodegenResult<OwnedTargetIsa> {
     let isa_flags = riscv_settings::Flags::new(&shared_flags, builder);
 
@@ -260,6 +256,6 @@ fn isa_constructor(
         ));
     }
 
-    let backend = RiscvBackend::new_with_flags(triple, shared_flags, isa_flags);
+    let backend = RiscvBackend::new_with_flags(triple, shared_flags, isa_flags, pointer_width);
     Ok(backend.wrapped())
 }
