@@ -8,11 +8,11 @@ use generated_code::MInst;
 // Types that the generated ISLE code uses via `use super::*`.
 use self::generated_code::{FpuOPWidth, VecAluOpRR, VecLmul};
 use crate::isa;
-use crate::isa::riscv64::abi::Riscv64ABICallSite;
-use crate::isa::riscv64::lower::args::{
+use crate::isa::riscv_shared::abi::Riscv64ABICallSite;
+use crate::isa::riscv_shared::lower::args::{
     FReg, VReg, WritableFReg, WritableVReg, WritableXReg, XReg,
 };
-use crate::isa::riscv64::Riscv64Backend;
+use crate::isa::riscv_shared::Riscv64Backend;
 use crate::machinst::Reg;
 use crate::machinst::{isle::*, CallInfo, MachInst};
 use crate::machinst::{VCodeConstant, VCodeConstantData};
@@ -21,7 +21,7 @@ use crate::{
         immediates::*, types::*, AtomicRmwOp, BlockCall, ExternalName, Inst, InstructionData,
         MemFlags, Opcode, TrapCode, Value, ValueList,
     },
-    isa::riscv64::inst::*,
+    isa::riscv_shared::inst::*,
     machinst::{ArgPair, InstOutput, IsTailCall},
 };
 use regalloc2::PReg;

@@ -2,7 +2,7 @@
 
 use crate::dominator_tree::DominatorTree;
 use crate::ir::{Function, Type};
-use crate::isa::riscv64::settings as riscv_settings;
+use crate::isa::riscv_shared::settings as riscv_settings;
 use crate::isa::{Builder as IsaBuilder, FunctionAlignment, OwnedTargetIsa, TargetIsa};
 use crate::machinst::{
     compile, CompiledCode, CompiledCodeStencil, MachInst, MachTextSectionBuilder, Reg, SigSet,

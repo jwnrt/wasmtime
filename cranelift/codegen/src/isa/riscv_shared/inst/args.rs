@@ -3,7 +3,7 @@
 use super::*;
 use crate::ir::condcodes::CondCode;
 
-use crate::isa::riscv64::lower::isle::generated_code::{
+use crate::isa::riscv_shared::lower::isle::generated_code::{
     COpcodeSpace, CaOp, CbOp, CiOp, CiwOp, ClOp, CrOp, CsOp, CssOp, CsznOp, FpuOPWidth, ZcbMemOp,
 };
 use crate::machinst::isle::WritableReg;

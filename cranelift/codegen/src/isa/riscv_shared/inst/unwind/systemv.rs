@@ -1,6 +1,6 @@
 //! Unwind information for System V ABI (Riscv64).
 
-use crate::isa::riscv64::inst::regs;
+use crate::isa::riscv_shared::inst::regs;
 use crate::isa::unwind::systemv::RegisterMappingError;
 use crate::machinst::Reg;
 use gimli::{write::CommonInformationEntry, Encoding, Format, Register};

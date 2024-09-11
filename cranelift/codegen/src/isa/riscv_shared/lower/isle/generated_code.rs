@@ -6,4 +6,4 @@
 #![allow(unused_imports, unused_variables, non_snake_case, unused_mut)]
 #![allow(irrefutable_let_patterns, clippy::clone_on_copy)]
 
-include!(concat!(env!("ISLE_DIR"), "/isle_riscv64.rs"));
+include!(concat!(env!("ISLE_DIR"), "/isle_riscv_shared.rs"));

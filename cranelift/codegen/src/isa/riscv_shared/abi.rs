@@ -5,13 +5,13 @@ use crate::ir::types::*;
 
 use crate::isa;
 
-use crate::isa::riscv64::inst::*;
+use crate::isa::riscv_shared::inst::*;
 use crate::isa::CallConv;
 use crate::machinst::*;
 
 use crate::ir::LibCall;
 use crate::ir::Signature;
-use crate::isa::riscv64::settings::Flags as RiscvFlags;
+use crate::isa::riscv_shared::settings::Flags as RiscvFlags;
 use crate::isa::unwind::UnwindInst;
 use crate::settings;
 use crate::CodegenError;

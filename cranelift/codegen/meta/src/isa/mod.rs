@@ -4,7 +4,7 @@ use std::fmt;
 
 mod arm64;
 mod pulley;
-mod riscv64;
+mod riscv;
 mod s390x;
 pub(crate) mod x86;
 
@@ -74,7 +74,7 @@ pub(crate) fn define(isas: &[Isa]) -> Vec<TargetIsa> {
             Isa::X86 => x86::define(),
             Isa::Arm64 => arm64::define(),
             Isa::S390x => s390x::define(),
-            Isa::Riscv64 => riscv64::define(),
+            Isa::Riscv64 => riscv::define(),
             Isa::Pulley32 | Isa::Pulley64 => pulley::define(),
         })
         .collect()

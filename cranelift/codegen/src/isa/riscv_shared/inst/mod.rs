@@ -33,7 +33,7 @@ pub mod encode;
 pub use self::encode::*;
 pub mod unwind;
 
-use crate::isa::riscv64::abi::Riscv64MachineDeps;
+use crate::isa::riscv_shared::abi::Riscv64MachineDeps;
 
 #[cfg(test)]
 mod emit_tests;
@@ -45,11 +45,11 @@ pub(crate) type VecU8 = Vec<u8>;
 //=============================================================================
 // Instructions (top level): definition
 
-pub use crate::isa::riscv64::lower::isle::generated_code::{
+pub use crate::isa::riscv_shared::lower::isle::generated_code::{
     AluOPRRI, AluOPRRR, AtomicOP, CsrImmOP, CsrRegOP, FClassResult, FFlagsException, FpuOPRR,
     FpuOPRRR, FpuOPRRRR, LoadOP, MInst as Inst, StoreOP, CSR, FRM,
 };
-use crate::isa::riscv64::lower::isle::generated_code::{CjOp, MInst, VecAluOpRRImm5, VecAluOpRRR};
+use crate::isa::riscv_shared::lower::isle::generated_code::{CjOp, MInst, VecAluOpRRImm5, VecAluOpRRR};
 
 /// Additional information for `return_call[_ind]` instructions, left out of
 /// line to lower the size of the `Inst` enum.

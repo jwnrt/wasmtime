@@ -1,8 +1,8 @@
 //! Riscv64 ISA: binary code emission.
 
 use crate::ir::{self, LibCall, TrapCode};
-use crate::isa::riscv64::inst::*;
-use crate::isa::riscv64::lower::isle::generated_code::{
+use crate::isa::riscv_shared::inst::*;
+use crate::isa::riscv_shared::lower::isle::generated_code::{
     CaOp, CbOp, CiOp, CiwOp, ClOp, CrOp, CsOp, CssOp, CsznOp, FpuOPWidth, ZcbMemOp,
 };
 use cranelift_control::ControlPlane;
@@ -68,7 +68,7 @@ impl EmitState {
 
 impl MachInstEmitState<Inst> for EmitState {
     fn new(
-        abi: &Callee<crate::isa::riscv64::abi::Riscv64MachineDeps>,
+        abi: &Callee<crate::isa::riscv_shared::abi::Riscv64MachineDeps>,
         ctrl_plane: ControlPlane,
     ) -> Self {
         EmitState {

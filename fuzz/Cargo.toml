@@ -15,7 +15,7 @@ cargo-fuzz = true
 anyhow = { workspace = true }
 env_logger = { workspace = true }
 once_cell = { workspace = true }
-cranelift-codegen = { workspace = true, features = ["incremental-cache", "x86", "arm64", "s390x", "riscv64"] }
+cranelift-codegen = { workspace = true, features = ["incremental-cache", "x86", "arm64", "s390x", "riscv"] }
 cranelift-reader = { workspace = true }
 cranelift-wasm = { workspace = true }
 cranelift-filetests = { workspace = true }

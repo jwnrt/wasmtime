@@ -38,7 +38,10 @@ pub fn get_isle_compilations(
     let src_isa_x64 = codegen_crate_dir.join("src").join("isa").join("x64");
     let src_isa_aarch64 = codegen_crate_dir.join("src").join("isa").join("aarch64");
     let src_isa_s390x = codegen_crate_dir.join("src").join("isa").join("s390x");
-    let src_isa_risc_v = codegen_crate_dir.join("src").join("isa").join("riscv64");
+    let src_isa_risc_v = codegen_crate_dir
+        .join("src")
+        .join("isa")
+        .join("riscv_shared");
     let src_isa_pulley_shared = codegen_crate_dir
         .join("src")
         .join("isa")
@@ -116,7 +119,7 @@ pub fn get_isle_compilations(
             },
             // The risc-v instruction selector.
             IsleCompilation {
-                output: gen_dir.join("isle_riscv64.rs"),
+                output: gen_dir.join("isle_riscv_shared.rs"),
                 inputs: vec![
                     prelude_isle.clone(),
                     prelude_lower_isle.clone(),
