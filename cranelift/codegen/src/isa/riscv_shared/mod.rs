@@ -1,4 +1,4 @@
-//! risc-v 64-bit Instruction Set Architecture.
+//! RISC-V 32- and 64-bit Instruction Set Architecture.
 
 use crate::dominator_tree::DominatorTree;
 use crate::ir::{Function, Type};
@@ -24,21 +24,21 @@ use crate::isa::unwind::systemv;
 
 use self::inst::EmitInfo;
 
-/// An riscv64 backend.
-pub struct Riscv64Backend {
+/// A RISC-V backend.
+pub struct RiscvBackend {
     triple: Triple,
     flags: shared_settings::Flags,
     isa_flags: riscv_settings::Flags,
 }
 
-impl Riscv64Backend {
-    /// Create a new riscv64 backend with the given (shared) flags.
+impl RiscvBackend {
+    /// Create a new RISC-V backend with the given (shared) flags.
     pub fn new_with_flags(
         triple: Triple,
         flags: shared_settings::Flags,
         isa_flags: riscv_settings::Flags,
-    ) -> Riscv64Backend {
-        Riscv64Backend {
+    ) -> RiscvBackend {
+        RiscvBackend {
             triple,
             flags,
             isa_flags,
@@ -54,13 +54,13 @@ impl Riscv64Backend {
         ctrl_plane: &mut ControlPlane,
     ) -> CodegenResult<(VCode<inst::Inst>, regalloc2::Output)> {
         let emit_info = EmitInfo::new(self.flags.clone(), self.isa_flags.clone());
-        let sigs = SigSet::new::<abi::Riscv64MachineDeps>(func, &self.flags)?;
-        let abi = abi::Riscv64Callee::new(func, self, &self.isa_flags, &sigs)?;
-        compile::compile::<Riscv64Backend>(func, domtree, self, abi, emit_info, sigs, ctrl_plane)
+        let sigs = SigSet::new::<abi::RiscvMachineDeps>(func, &self.flags)?;
+        let abi = abi::RiscvCallee::new(func, self, &self.isa_flags, &sigs)?;
+        compile::compile::<RiscvBackend>(func, domtree, self, abi, emit_info, sigs, ctrl_plane)
     }
 }
 
-impl TargetIsa for Riscv64Backend {
+impl TargetIsa for RiscvBackend {
     fn compile_function(
         &self,
         func: &Function,
@@ -212,7 +212,7 @@ impl TargetIsa for Riscv64Backend {
     }
 }
 
-impl fmt::Display for Riscv64Backend {
+impl fmt::Display for RiscvBackend {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         f.debug_struct("MachBackend")
             .field("name", &self.name())
@@ -260,6 +260,6 @@ fn isa_constructor(
         ));
     }
 
-    let backend = Riscv64Backend::new_with_flags(triple, shared_flags, isa_flags);
+    let backend = RiscvBackend::new_with_flags(triple, shared_flags, isa_flags);
     Ok(backend.wrapped())
 }

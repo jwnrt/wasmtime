@@ -278,7 +278,7 @@ impl Context {
 
     /// Perform NaN canonicalizing rewrites on the function.
     pub fn canonicalize_nans(&mut self, isa: &dyn TargetIsa) -> CodegenResult<()> {
-        // Currently only RiscV64 is the only arch that may not have vector support.
+        // Currently `Riscv64` is the only arch that may not have vector support.
         let has_vector_support = match isa.triple().architecture {
             Architecture::Riscv64(_) => match isa.isa_flags().iter().find(|f| f.name == "has_v") {
                 Some(value) => value.as_bool().unwrap_or(false),

@@ -1,4 +1,4 @@
-//! Implementation of a standard Riscv64 ABI.
+//! Implementation of a standard RISC-V ABI.
 
 use crate::ir;
 use crate::ir::types::*;
@@ -23,20 +23,20 @@ use regalloc2::{MachineEnv, PReg, PRegSet};
 use smallvec::{smallvec, SmallVec};
 use std::sync::OnceLock;
 
-/// Support for the Riscv64 ABI from the callee side (within a function body).
-pub(crate) type Riscv64Callee = Callee<Riscv64MachineDeps>;
+/// Support for the RISC-V ABI from the callee side (within a function body).
+pub(crate) type RiscvCallee = Callee<RiscvMachineDeps>;
 
-/// Support for the Riscv64 ABI from the caller side (at a callsite).
-pub(crate) type Riscv64ABICallSite = CallSite<Riscv64MachineDeps>;
+/// Support for the RISC-V ABI from the caller side (at a callsite).
+pub(crate) type RiscvABICallSite = CallSite<RiscvMachineDeps>;
 
 /// This is the limit for the size of argument and return-value areas on the
 /// stack. We place a reasonable limit here to avoid integer overflow issues
 /// with 32-bit arithmetic: for now, 128 MB.
 static STACK_ARG_RET_SIZE_LIMIT: u32 = 128 * 1024 * 1024;
 
-/// Riscv64-specific ABI behavior. This struct just serves as an implementation
+/// RISC-V-specific ABI behavior. This struct just serves as an implementation
 /// point for the trait; it is never actually instantiated.
-pub struct Riscv64MachineDeps;
+pub struct RiscvMachineDeps;
 
 impl IsaFlags for RiscvFlags {}
 
@@ -74,7 +74,7 @@ impl RiscvFlags {
     }
 }
 
-impl ABIMachineSpec for Riscv64MachineDeps {
+impl ABIMachineSpec for RiscvMachineDeps {
     type I = Inst;
     type F = RiscvFlags;
 
@@ -98,7 +98,7 @@ impl ABIMachineSpec for Riscv64MachineDeps {
         assert_ne!(
             call_conv,
             isa::CallConv::Winch,
-            "riscv64 does not support the 'winch' calling convention yet"
+            "riscv does not support the 'winch' calling convention yet"
         );
 
         // All registers that can be used as parameters or rets.
@@ -724,7 +724,7 @@ impl ABIMachineSpec for Riscv64MachineDeps {
     }
 }
 
-impl Riscv64ABICallSite {
+impl RiscvABICallSite {
     pub fn emit_return_call(mut self, ctx: &mut Lower<Inst>, args: isle::ValueSlice) {
         let new_stack_arg_size =
             u32::try_from(self.sig(ctx.sigs()).sized_stack_arg_space()).unwrap();
@@ -951,7 +951,7 @@ fn create_reg_enviroment() -> MachineEnv {
     }
 }
 
-impl Riscv64MachineDeps {
+impl RiscvMachineDeps {
     fn gen_probestack_unroll(
         insts: &mut SmallInstVec<Inst>,
         tmp: Writable<Reg>,

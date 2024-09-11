@@ -1,4 +1,4 @@
-//! Riscv64 ISA definitions: instruction arguments.
+//! RISC-V ISA definitions: instruction arguments.
 
 use super::*;
 use crate::ir::condcodes::CondCode;

@@ -26,7 +26,7 @@ macro_rules! define_zvl_ext {
 }
 
 pub(crate) fn define() -> TargetIsa {
-    let mut setting = SettingGroupBuilder::new("riscv64");
+    let mut setting = SettingGroupBuilder::new("riscv");
 
     // We target a minimum of riscv64g. That means that we have the following extensions by default:
     //
@@ -177,5 +177,5 @@ pub(crate) fn define() -> TargetIsa {
         predicate!(has_m && has_a && has_f && has_d && has_zicsr && has_zifencei),
     );
 
-    TargetIsa::new("riscv64", setting.build())
+    TargetIsa::new("riscv", setting.build())
 }

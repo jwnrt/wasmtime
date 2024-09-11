@@ -9,7 +9,7 @@ fn fa7() -> Reg {
 }
 
 #[test]
-fn test_riscv64_binemit() {
+fn test_riscv_binemit() {
     struct TestUnit {
         inst: Inst,
         assembly: &'static str,
@@ -2166,7 +2166,7 @@ fn test_riscv64_binemit() {
     let emit_info = EmitInfo::new(flags, isa_flags);
 
     for unit in insns.iter() {
-        println!("Riscv64: {:?}, {}", unit.inst, unit.assembly);
+        println!("RISC-V: {:?}, {}", unit.inst, unit.assembly);
         // Check the printed text is as expected.
         let actual_printing = unit.inst.print_with_state(&mut EmitState::default());
         assert_eq!(unit.assembly, actual_printing);
@@ -2189,7 +2189,7 @@ fn make_test_flags() -> (settings::Flags, super::super::riscv_settings::Flags) {
 }
 
 #[test]
-fn riscv64_worst_case_instruction_size() {
+fn riscv_worst_case_instruction_size() {
     let (flags, isa_flags) = make_test_flags();
     let emit_info = EmitInfo::new(flags, isa_flags);
 

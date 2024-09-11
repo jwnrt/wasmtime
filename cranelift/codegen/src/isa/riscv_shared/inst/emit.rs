@@ -1,4 +1,4 @@
-//! Riscv64 ISA: binary code emission.
+//! RISC-V ISA: binary code emission.
 
 use crate::ir::{self, LibCall, TrapCode};
 use crate::isa::riscv_shared::inst::*;
@@ -68,7 +68,7 @@ impl EmitState {
 
 impl MachInstEmitState<Inst> for EmitState {
     fn new(
-        abi: &Callee<crate::isa::riscv_shared::abi::Riscv64MachineDeps>,
+        abi: &Callee<crate::isa::riscv_shared::abi::RiscvMachineDeps>,
         ctrl_plane: ControlPlane,
     ) -> Self {
         EmitState {
@@ -1129,7 +1129,7 @@ impl Inst {
 
                 let callee_pop_size = i32::try_from(info.callee_pop_size).unwrap();
                 if callee_pop_size > 0 {
-                    for inst in Riscv64MachineDeps::gen_sp_reg_adjust(-callee_pop_size) {
+                    for inst in RiscvMachineDeps::gen_sp_reg_adjust(-callee_pop_size) {
                         inst.emit(sink, emit_info, state);
                     }
                 }
@@ -1151,7 +1151,7 @@ impl Inst {
 
                 let callee_pop_size = i32::try_from(info.callee_pop_size).unwrap();
                 if callee_pop_size > 0 {
-                    for inst in Riscv64MachineDeps::gen_sp_reg_adjust(-callee_pop_size) {
+                    for inst in RiscvMachineDeps::gen_sp_reg_adjust(-callee_pop_size) {
                         inst.emit(sink, emit_info, state);
                     }
                 }
@@ -2678,7 +2678,7 @@ fn return_call_emit_impl<T>(
     // Increment SP all at once
     let sp_increment = sp_to_fp_offset + setup_area_size + incoming_args_diff;
     if sp_increment > 0 {
-        for inst in Riscv64MachineDeps::gen_sp_reg_adjust(i32::try_from(sp_increment).unwrap()) {
+        for inst in RiscvMachineDeps::gen_sp_reg_adjust(i32::try_from(sp_increment).unwrap()) {
             inst.emit(sink, emit_info, state);
         }
     }

@@ -117,7 +117,7 @@ pub fn get_isle_compilations(
                 ],
                 untracked_inputs: vec![clif_lower_isle.clone()],
             },
-            // The risc-v instruction selector.
+            // The RISC-V instruction selector.
             IsleCompilation {
                 output: gen_dir.join("isle_riscv_shared.rs"),
                 inputs: vec![

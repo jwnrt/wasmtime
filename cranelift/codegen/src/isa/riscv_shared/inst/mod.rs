@@ -1,4 +1,4 @@
-//! This module defines riscv64-specific machine instruction types.
+//! This module defines riscv-specific machine instruction types.
 
 use super::lower::isle::generated_code::{VecAMode, VecElementWidth, VecOpMasking};
 use crate::binemit::{Addend, CodeOffset, Reloc};
@@ -33,7 +33,7 @@ pub mod encode;
 pub use self::encode::*;
 pub mod unwind;
 
-use crate::isa::riscv_shared::abi::Riscv64MachineDeps;
+use crate::isa::riscv_shared::abi::RiscvMachineDeps;
 
 #[cfg(test)]
 mod emit_tests;
@@ -49,7 +49,9 @@ pub use crate::isa::riscv_shared::lower::isle::generated_code::{
     AluOPRRI, AluOPRRR, AtomicOP, CsrImmOP, CsrRegOP, FClassResult, FFlagsException, FpuOPRR,
     FpuOPRRR, FpuOPRRRR, LoadOP, MInst as Inst, StoreOP, CSR, FRM,
 };
-use crate::isa::riscv_shared::lower::isle::generated_code::{CjOp, MInst, VecAluOpRRImm5, VecAluOpRRR};
+use crate::isa::riscv_shared::lower::isle::generated_code::{
+    CjOp, MInst, VecAluOpRRImm5, VecAluOpRRR,
+};
 
 /// Additional information for `return_call[_ind]` instructions, left out of
 /// line to lower the size of the `Inst` enum.
@@ -270,7 +272,7 @@ fn vec_mask_late_operands(mask: &mut VecOpMasking, collector: &mut impl OperandV
     }
 }
 
-fn riscv64_get_operands(inst: &mut Inst, collector: &mut impl OperandVisitor) {
+fn riscv_get_operands(inst: &mut Inst, collector: &mut impl OperandVisitor) {
     match inst {
         Inst::Nop0 | Inst::Nop4 => {}
         Inst::BrTable {
@@ -384,7 +386,7 @@ fn riscv64_get_operands(inst: &mut Inst, collector: &mut impl OperandVisitor) {
         Inst::ElfTlsGetAddr { rd, .. } => {
             // x10 is a0 which is both the first argument and the first return value.
             collector.reg_fixed_def(rd, a0());
-            let mut clobbers = Riscv64MachineDeps::get_regs_clobbered_by_call(CallConv::SystemV);
+            let mut clobbers = RiscvMachineDeps::get_regs_clobbered_by_call(CallConv::SystemV);
             clobbers.remove(px_reg(10));
             collector.reg_clobbers(clobbers);
         }
@@ -685,7 +687,7 @@ fn riscv64_get_operands(inst: &mut Inst, collector: &mut impl OperandVisitor) {
 
 impl MachInst for Inst {
     type LabelUse = LabelUse;
-    type ABIMachineSpec = Riscv64MachineDeps;
+    type ABIMachineSpec = RiscvMachineDeps;
 
     // https://github.com/riscv/riscv-isa-manual/issues/850
     // all zero will cause invalid opcode.
@@ -711,7 +713,7 @@ impl MachInst for Inst {
     }
 
     fn get_operands(&mut self, collector: &mut impl OperandVisitor) {
-        riscv64_get_operands(self, collector);
+        riscv_get_operands(self, collector);
     }
 
     fn is_move(&self) -> Option<(Writable<Reg>, Reg)> {
@@ -816,7 +818,7 @@ impl MachInst for Inst {
     }
 
     fn worst_case_size() -> CodeOffset {
-        // Our worst case size is determined by the riscv64_worst_case_instruction_size test
+        // Our worst case size is determined by the riscv_worst_case_instruction_size test
         84
     }
 
@@ -1656,7 +1658,7 @@ pub enum LabelUse {
 }
 
 impl MachInstLabelUse for LabelUse {
-    /// Alignment for veneer code. Every Riscv64 instruction must be
+    /// Alignment for veneer code. Every RISC-V instruction must be
     /// 4-byte-aligned.
     const ALIGN: CodeOffset = 4;
 
